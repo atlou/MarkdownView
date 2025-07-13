@@ -34,7 +34,6 @@ public struct MarkdownView: View {
         markdownViewStyle
             .makeBody(configuration: MarkdownViewStyleConfiguration(body: _renderedBody))
             .erasedToAnyView()
-            .font(bodyFont)
     }
     
     @ViewBuilder
