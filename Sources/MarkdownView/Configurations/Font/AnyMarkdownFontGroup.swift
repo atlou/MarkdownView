@@ -15,6 +15,7 @@ public struct AnyMarkdownFontGroup: Sendable, Hashable {
     var _body: Font
     var _inlineMath: Font
     var _displayMath: Font
+    var _link: Font
     
     init(_ group: some MarkdownFontGroup) {
         _h1 = group.h1
@@ -30,6 +31,7 @@ public struct AnyMarkdownFontGroup: Sendable, Hashable {
         _body = group.body
         _inlineMath = group.inlineMath
         _displayMath = group.displayMath
+        _link = group.link
     }
 }
 
@@ -47,6 +49,7 @@ extension AnyMarkdownFontGroup: MarkdownFontGroup {
     public var body: Font { _body }
     public var inlineMath: Font { _inlineMath }
     public var displayMath: Font { _displayMath }
+    public var link: Font { _link }
 }
 
 extension AnyMarkdownFontGroup: Equatable { }

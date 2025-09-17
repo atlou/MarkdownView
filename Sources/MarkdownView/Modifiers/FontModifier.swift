@@ -38,6 +38,7 @@ extension View {
             case .tableHeader: fontGroup._tableHeader = font
             case .inlineMath: fontGroup._inlineMath = font
             case .displayMath: fontGroup._displayMath = font
+            case .link: fontGroup._link = font
             }
         }
     }

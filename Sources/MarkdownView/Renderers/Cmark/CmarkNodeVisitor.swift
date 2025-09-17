@@ -235,26 +235,37 @@ struct CmarkNodeVisitor: @preconcurrency MarkupVisitor {
         switch nodeView.contentType {
         case .text:
             return MarkdownNodeView {
-                nodeView.asText!
-                    .contentShape(.rect)
-                    #if os(macOS)
-                    .onTapGesture {
-                        NSWorkspace.shared.open(url)
-                    }
-                    #elseif !os(watchOS) && !os(tvOS)
-                    .onTapGesture {
-                        UIApplication.shared.open(url)
-                    }
-                    #endif
-                    .foregroundStyle(configuration.linkTintColor)
+                ApplyLinkFont {
+                    nodeView.asText!
+                        .contentShape(.rect)
+                        #if os(macOS)
+                        .onTapGesture {
+                            NSWorkspace.shared.open(url)
+                        }
+                        #elseif !os(watchOS) && !os(tvOS)
+                        .onTapGesture {
+                            UIApplication.shared.open(url)
+                        }
+                        #endif
+                        .foregroundStyle(configuration.linkTintColor)
+                }
             }
         case .view:
             return MarkdownNodeView {
-                Link(destination: url) {
-                    nodeView
+                ApplyLinkFont {
+                    Link(destination: url) {
+                        nodeView
+                    }
+                    .foregroundStyle(configuration.linkTintColor)
                 }
-                .foregroundStyle(configuration.linkTintColor)
             }
         }
     }
+}
+
+// Applies the link font from environment to its content.
+private struct ApplyLinkFont<Content: View>: View {
+    @Environment(\.markdownFontGroup.link) private var linkFont
+    @ViewBuilder var content: Content
+    var body: some View { content.font(linkFont) }
 }

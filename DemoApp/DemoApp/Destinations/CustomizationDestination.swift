@@ -5,8 +5,8 @@
 //  Created by LiYanan2004 on 2024/10/24.
 //
 
-import SwiftUI
 import MarkdownView
+import SwiftUI
 
 struct CustomizationDestination: View {
     @State private var quoteTint = Color.accentColor

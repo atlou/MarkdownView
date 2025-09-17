@@ -7,4 +7,5 @@ public enum MarkdownTextType: Equatable, CaseIterable {
     case codeBlock, blockQuote
     case tableHeader, tableBody
     case inlineMath, displayMath
+    case link
 }

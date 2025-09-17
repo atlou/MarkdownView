@@ -26,6 +26,9 @@ public protocol MarkdownFontGroup {
     // Math
     var inlineMath: Font { get }
     var displayMath: Font { get }
+
+    // Links
+    var link: Font { get }
 }
 
 extension MarkdownFontGroup {
@@ -50,6 +53,9 @@ extension MarkdownFontGroup {
     // Math
     public var inlineMath: Font { Font.body }
     public var displayMath: Font { Font.body }
+
+    // Links
+    public var link: Font { Font.body }
 }
 
 // MARK: - Environment Values
