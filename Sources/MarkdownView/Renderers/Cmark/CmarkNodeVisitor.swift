@@ -227,36 +227,51 @@ struct CmarkNodeVisitor: @preconcurrency MarkupVisitor {
     }
     
     mutating func visitLink(_ link: Markdown.Link) -> MarkdownNodeView {
-        guard let destination = link.destination,
-              let url = URL(string: destination)
-        else { return descendInto(link) }
-        
+        let url: URL? = link.destination.flatMap { URL(string: $0) }
         let nodeView = descendInto(link)
         switch nodeView.contentType {
         case .text:
             return MarkdownNodeView {
                 ApplyLinkFont {
+                    #if os(macOS)
+                    if let url {
+                        nodeView.asText!
+                            .contentShape(.rect)
+                            .onTapGesture { NSWorkspace.shared.open(url) }
+                            .foregroundStyle(configuration.linkTintColor)
+                    } else {
+                        nodeView.asText!
+                            .contentShape(.rect)
+                            .foregroundStyle(configuration.linkTintColor)
+                    }
+                    #elseif !os(watchOS) && !os(tvOS)
+                    if let url {
+                        nodeView.asText!
+                            .contentShape(.rect)
+                            .onTapGesture { UIApplication.shared.open(url) }
+                            .foregroundStyle(configuration.linkTintColor)
+                    } else {
+                        nodeView.asText!
+                            .contentShape(.rect)
+                            .foregroundStyle(configuration.linkTintColor)
+                    }
+                    #else
                     nodeView.asText!
                         .contentShape(.rect)
-                        #if os(macOS)
-                        .onTapGesture {
-                            NSWorkspace.shared.open(url)
-                        }
-                        #elseif !os(watchOS) && !os(tvOS)
-                        .onTapGesture {
-                            UIApplication.shared.open(url)
-                        }
-                        #endif
                         .foregroundStyle(configuration.linkTintColor)
+                    #endif
                 }
             }
         case .view:
             return MarkdownNodeView {
                 ApplyLinkFont {
-                    Link(destination: url) {
+                    if let url {
+                        Link(destination: url) { nodeView }
+                            .foregroundStyle(configuration.linkTintColor)
+                    } else {
                         nodeView
+                            .foregroundStyle(configuration.linkTintColor)
                     }
-                    .foregroundStyle(configuration.linkTintColor)
                 }
             }
         }
